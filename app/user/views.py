@@ -1,9 +1,11 @@
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_user, logout_user
+from werkzeug.urls import url_parse
 
+from app.utils import get_url_target
 from app.db import db
-from app.user.models import User
 from app.user.forms import LoginForm, RegistrationForm
+from app.user.models import User
 
 blueprint = Blueprint("user", __name__)
 
@@ -11,6 +13,7 @@ blueprint = Blueprint("user", __name__)
 @blueprint.route("/login")
 def login():
     if current_user.is_authenticated:
+        flash("Вы уже авторизованы!")
         return redirect(url_for("collection.index"))
     else:
         title = "Авторизация"
@@ -27,7 +30,8 @@ def process_login():
         if user and user.check_password(login_form.password.data):
             login_user(user, remember=login_form.remember_me.data)
             flash("Вы успешно авторизовались.")
-            return redirect(url_for("collection.index"))
+
+            return redirect(get_url_target())
 
     flash("Логин или пароль неверны. Попробуйте снова")
     return redirect(url_for("user.login"))
@@ -42,6 +46,7 @@ def logout():
 @blueprint.route("/registration")
 def registration():
     if current_user.is_authenticated:
+        flash("Вы авторизованы. Чтобы зарегистрировать еще один аккаунт выйдите из своего профиля.")
         return redirect(url_for("collection.index"))
     else:
         title = "Регистрация"
