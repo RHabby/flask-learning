@@ -1,5 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
+    <title>{{title}}</title>
     {% include "messages.html" %}
-    <h1> Hi, {{ current_user.username }}!!</h1>
+
+    <br>
+    <form class="form-inline" action="{{ url_for('collection.process_collecting')}}" method="POST">
+        {{ url_form.hidden_tag() }}
+        <div class="form-group">
+            <!-- {{ url_form.url.label }} -->
+            {{ url_form.url() }}
+        </div>
+        {{ url_form.submit }}
+    </form>
+    <br>
+
+    <div class="row row-cols-1 row-cols-md-3">
+        {% for bookmark in collection %}
+            <div class="mb-4">
+                <div class="card" style="width: 20rem;">
+                    <img src="{{ bookmark.image }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title title-body">{{ bookmark.title }}</h6>
+                        <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm"><small>{{ bookmark.base_url }}</small></a>
+                        <!-- <p class="card-text">{{ bookmark.description }}</p> -->
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock content%}

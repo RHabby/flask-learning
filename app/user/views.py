@@ -13,8 +13,8 @@ blueprint = Blueprint("user", __name__)
 @blueprint.route("/login")
 def login():
     if current_user.is_authenticated:
-        flash("Вы уже авторизованы!")
-        return redirect(url_for("collection.index"))
+        # flash("Вы уже авторизованы!")
+        return redirect(url_for("collection.index", username=current_user.username))
     else:
         title = "Авторизация"
         login_form = LoginForm()

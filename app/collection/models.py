@@ -23,4 +23,4 @@ class Collections(db.Model):
     user = relationship("User", backref="collections")
 
     def __repr__(self):
-        return f"Collection {self.id}"
+        return f"Collection {self.id}, {self.title}"

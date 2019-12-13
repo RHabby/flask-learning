@@ -5,3 +5,8 @@ div.reg-but {
 .forms {
     margin-top: 10%;
 }
+
+.title-body {
+    height: 5rem;
+    overflow: hidden;
+}
