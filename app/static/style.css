@@ -10,3 +10,7 @@ div.reg-but {
     height: 5rem;
     overflow: hidden;
 }
+
+.single {
+    margin-right: 15px;
+}

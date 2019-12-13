@@ -8,8 +8,8 @@ from app.db import db
 class Collections(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
-    image = db.Column(db.String, unique=True, nullable=False)
-    url = db.Column(db.String, unique=True, nullable=False)
+    image = db.Column(db.String, nullable=False)
+    url = db.Column(db.String, nullable=False)
     base_url = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
     content_type = db.Column(db.String)

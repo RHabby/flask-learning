@@ -5,7 +5,6 @@ from app.collection.forms import UrlForm
 from app.collection.models import Collections
 from app.collection.url_extractor.url_extractor import (extract_open_graph,
                                                         find_base_url)
-from app.collection.url_extractor.utils import save_bookmark
 from app.db import db
 from app.user.models import User
 
@@ -18,7 +17,7 @@ def index(username):
     title = f"Полка | {current_user.username}"
     url_form = UrlForm()
     collection = Collections.query.order_by(
-        Collections.created.desc()).filter(Collections.user_id == current_user.id ).all()
+        Collections.created.desc()).filter(Collections.user_id == current_user.id).all()
     return render_template("collection/index.html", collection=collection, url_form=url_form, title=title)
 
 
@@ -31,6 +30,10 @@ def process_collecting():
         base_url = find_base_url(bookmark_url)
         bookmark = Collections(title=og_url_info["og:title"], image=og_url_info["og:image"], url=og_url_info["og:url"],
                                base_url=base_url, description=og_url_info["og:description"], content_type=og_url_info["og:type"], user_id=current_user.id)
+
+        db.session.add(bookmark)
+        db.session.commit()
+
         flash("Сделано!")
         return redirect(url_for("collection.index", username=current_user.username))
     else:
