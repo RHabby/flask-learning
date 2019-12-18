@@ -29,8 +29,4 @@ def create_app():
     def load_user(id):
         return User.query.get(id)
 
-    @app.route("/")
-    def hello():
-        return render_template("base.html")
-
     return app

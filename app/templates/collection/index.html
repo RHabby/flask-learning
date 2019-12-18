@@ -1,32 +1,92 @@
 {% extends "base.html" %}
+
 {% block content %}
-    <title>{{title}}</title>
-    {% include "messages.html" %}
+    <div class="container">
+        <title>{{title}}</title>
+        {% include "messages.html" %}
+        <div class="row">
+            <div class="col-7">
+                <div class="search-form">
+                    <form action="{{ url_for('collection.process_collecting')}}" method="POST">
+                        <div class="form-row">
+                            {{ url_form.hidden_tag() }}
 
-    <br>
-    <form class="form-inline" action="{{ url_for('collection.process_collecting')}}" method="POST">
-        {{ url_form.hidden_tag() }}
-        <div class="form-group">
-            <!-- {{ url_form.url.label }} -->
-            {{ url_form.url() }}
-        </div>
-        {{ url_form.submit }}
-    </form>
-    <br>
+                            <div class="col-7">
+                                <div class="form-group">
+                                    <!-- {{ url_form.url.label }} -->
+                                    {{ url_form.url() }}
+                                </div>
+                            </div>
 
-    <div class="row row-cols-1 row-cols-md-3">
-        {% for bookmark in collection %}
-            <div class="mb-4">
-                <div class="card single" style="width: 20rem;">
-                    <img src="{{ bookmark.image }}" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h6 class="card-title title-body">{{ bookmark.title }}</h6>
-                        <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm"><small>{{ bookmark.base_url }}</small></a>
-                        <!-- <p class="card-text">{{ bookmark.description }}</p> -->
-                    </div>
+                            <div class="col-auto">
+                                {{ url_form.submit }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-columns">
+                    {% for bookmark in collection %}
+                        {% if bookmark.image_url is none %}
+                            <div class="mb-1">
+                                <div class="card" style="width: 22rem;">
+                                    <div class="card-header bg-transparent">
+                                        <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm"><small>{{ bookmark.base_url }}</small></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="card-title title-body">{{ bookmark.title }}</h6>
+                                    </div>
+                                    <div class="card-footer bg-transparent">
+
+                                        <div class="container">
+                                            <div class="row justify-content-between">
+                                                <div class="col-auto">
+                                                    <p class="text-left"><small>Заметки: 0</small></p>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <a class="btn btn-outline-dark btn-sm delete" href="#" role="button">Удалить</a>
+                                                    <!-- <p class="text-right"><small>Удалить</small></p> -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="mb-1">
+                                <div class="card" style="width: 22rem;">
+                                    <img src="{{ bookmark.image_url }}" class="card-img-top card-img" alt="...">
+                                    <div class="card-img-overlay">
+                                        <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm"><small>{{ bookmark.base_url }}</small></a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h6 class="card-title title-body">{{ bookmark.title }}</h6>
+                                        <!-- <p class="card-text">{{ bookmark.description }}</p> -->
+                                    </div>
+                                    <div class="card-footer bg-transparent">
+
+                                        <div class="container">
+                                            <div class="row justify-content-between">
+                                                <div class="col-auto">
+                                                    <p class="text-left"><small>Заметки: 0</small></p>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="delete">
+                                                        <a class="btn btn-outline-dark btn-sm" href="#" role="button">Удалить</a>
+                                                        <!-- <p class="text-right"><small>Удалить</small></p> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
-        {% endfor %}
+        </div>
     </div>
 
 {% endblock content%}

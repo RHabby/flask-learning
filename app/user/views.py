@@ -47,7 +47,7 @@ def logout():
 def registration():
     if current_user.is_authenticated:
         flash("Вы авторизованы. Чтобы зарегистрировать еще один аккаунт выйдите из своего профиля.")
-        return redirect(url_for("collection.index"))
+        return redirect(url_for("collection.index", username=current_user.username))
     else:
         title = "Регистрация"
         registration_form = RegistrationForm()
@@ -81,13 +81,14 @@ def process_registration():
 @blueprint.route("/")
 def start_page():
     if current_user.is_authenticated:
-        return redirect(url_for("collection.index"))
+        return redirect(url_for("collection.index", username=current_user.username))
     else:
         login_title = "Авторизация"
         registration_title = "Регистрация"
 
         login_form = LoginForm()
         registration_form = RegistrationForm()
+
         return render_template(
             "user/start_page.html",
             login_title=login_title,

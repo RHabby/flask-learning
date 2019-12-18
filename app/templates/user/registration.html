@@ -1,45 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="forms">
-        <div class="row justify-content-md-center">
-            <div class="col-md-3">
-                <h1>{{ title }}</h1>
-                {% include "messages.html" %}
-                <div>
-                    <form action="{{ url_for('user.process_registration') }}" method="post">
-                        {{ registration_form.hidden_tag() }}
-                        <div class="form-group">
-                            {{ registration_form.username.label }}
-                            {{ registration_form.username() }}
-                        </div>
-                        <div class="form-group">
-                            {{ registration_form.first_name.label }}
-                            {{ registration_form.first_name() }}
-                        </div>
-                        <div class="form-group">
-                            {{ registration_form.last_name.label }}
-                            {{ registration_form.last_name() }}
-                        </div>
-                        <div class="form-group">
-                            {{ registration_form.email.label }}
-                            {{ registration_form.email() }}
-                        </div>
-                        <div class="form-group">
-                            {{ registration_form.password.label }}
-                            {{ registration_form.password() }}
-                        </div>
-                        <div class="form-group">
-                            {{ registration_form.submit_password.label }}
-                            {{ registration_form.submit_password() }}
-                        </div>
-                        {{ registration_form.submit }}
-                    </form>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-link btn-block">
-                        <a href="{{ url_for('user.login')}}">У вас уже есть аккаунт? Войти</a>
-                    </button>
+    <div class="container-fluid" style="width: 70%;">
+        <div class="forms">
+            <div class="row justify-content-md-center">
+                <div class="col-md-3">
+                    <h1>{{ title }}</h1>
+                    {% include "messages.html" %}
+                    <div>
+                        <form action="{{ url_for('user.process_registration') }}" method="post">
+                            {{ registration_form.hidden_tag() }}
+                            <div class="form-group">
+                                {{ registration_form.username.label }}
+                                {{ registration_form.username() }}
+                            </div>
+                            <div class="form-group">
+                                {{ registration_form.first_name.label }}
+                                {{ registration_form.first_name() }}
+                            </div>
+                            <div class="form-group">
+                                {{ registration_form.last_name.label }}
+                                {{ registration_form.last_name() }}
+                            </div>
+                            <div class="form-group">
+                                {{ registration_form.email.label }}
+                                {{ registration_form.email() }}
+                            </div>
+                            <div class="form-group">
+                                {{ registration_form.password.label }}
+                                {{ registration_form.password() }}
+                            </div>
+                            <div class="form-group">
+                                {{ registration_form.submit_password.label }}
+                                {{ registration_form.submit_password() }}
+                            </div>
+                            {{ registration_form.submit }}
+                        </form>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-link btn-block">
+                            <a href="{{ url_for('user.login')}}">У вас уже есть аккаунт? Войти</a>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

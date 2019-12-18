@@ -5,6 +5,7 @@ from extruct.opengraph import OpenGraphExtractor
 from w3lib.html import get_base_url
 
 from app.collection.url_extractor.utils import get_html, save_bookmark
+from bs4 import BeautifulSoup
 
 
 def extract_open_graph(url):
@@ -25,6 +26,17 @@ def extract_open_graph(url):
         return data
 
 
+def extract_url_info(url):
+    html = get_html(url).text
+    if html: 
+        soup = BeautifulSoup(html, "lxml")
+        title = soup.title.text
+        data = {"title": title, "url": url}
+    
+        return data
+    
+    return False
+
 def find_base_url(url):
     html = get_html(url)
     base_url = get_base_url(html.text, html.url)
@@ -32,8 +44,9 @@ def find_base_url(url):
     if base_url == url:
         base_url = url.split("/")[2]
         return base_url
-    
+
     return base_url
+
 
 if __name__ == "__main__":
     pp = pprint.PrettyPrinter(indent=1)
