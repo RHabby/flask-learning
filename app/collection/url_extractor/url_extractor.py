@@ -40,8 +40,9 @@ def extract_url_info(url):
 def find_base_url(url):
     html = get_html(url)
     base_url = get_base_url(html.text, html.url)
-
+    
     if base_url == url:
+        print("Split")
         base_url = url.split("/")[2]
         return base_url
 

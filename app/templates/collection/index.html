@@ -1,17 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container">
+    <div class="container-fluid" style="max-width: 60%;">
         <title>{{title}}</title>
         {% include "messages.html" %}
         <div class="row">
-            <div class="col-7">
+            <div class="col-3">
+                <table class="info">
+                    <tr>
+                        <td><img src="{{ current_user.avatar(128) }}"></td>
+                        
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                            <h6>{{ current_user.username }}</h6>
+                            <h6>{{ current_user.about_me }}</h6>
+                            <p><a class="btn btn-outline-dark btn-sm btn-block" href="{{ url_for('user.edit_profile')}}" role="button">Изменить профиль</a></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-9 main-block">
                 <div class="search-form">
                     <form action="{{ url_for('collection.process_collecting')}}" method="POST">
                         <div class="form-row">
                             {{ url_form.hidden_tag() }}
 
-                            <div class="col-7">
+                            <div class="col-10">
                                 <div class="form-group">
                                     <!-- {{ url_form.url.label }} -->
                                     {{ url_form.url() }}
@@ -24,68 +40,67 @@
                         </div>
                     </form>
                 </div>
-                <div class="card-columns">
+                <div class="card-columns cards">
                     {% for bookmark in collection %}
                         {% if bookmark.image_url is none %}
-                            <div class="mb-1">
-                                <div class="card" style="width: 22rem;">
-                                    <div class="card-header bg-transparent">
-                                        <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm"><small>{{ bookmark.base_url }}</small></a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h6 class="card-title title-body">{{ bookmark.title }}</h6>
-                                    </div>
-                                    <div class="card-footer bg-transparent">
+                            <div class="card">
+                                <div class="card-header bg-transparent">
+                                    <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm" target="_blank"><small>{{ bookmark.base_url }}</small></a>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title title-body">{{ bookmark.title }}</h6>
+                                </div>
+                                <div class="card-footer bg-transparent">
 
-                                        <div class="container">
-                                            <div class="row justify-content-between">
-                                                <div class="col-auto">
-                                                    <p class="text-left"><small>Заметки: 0</small></p>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <a class="btn btn-outline-dark btn-sm delete" href="#" role="button">Удалить</a>
+                                    <div class="container">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+                                                <p class="text-left"><small>Заметки: 0</small></p>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a class="btn btn-outline-dark btn-sm delete" href="#" role="button">Удалить</a>
+                                                <!-- <p class="text-right"><small>Удалить</small></p> -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% else %}
+                            
+                            <div class="card">
+                                <img src="{{ bookmark.image_url }}" class="card-img-top card-img" alt="...">
+                                <div class="card-img-overlay">
+                                    <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm" target="_blank"><small>{{ bookmark.base_url }}</small></a>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title title-body">{{ bookmark.title }}</h6>
+                                    <!-- <p class="card-text">{{ bookmark.description }}</p> -->
+                                </div>
+                                <div class="card-footer bg-transparent">
+
+                                    <div class="container">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+                                                <p class="text-left"><small>Заметки: 0</small></p>
+                                            </div>
+                                            <div class="col-auto">
+                                                <div class="delete">
+                                                    <a class="btn btn-outline-dark btn-sm" href="#" role="button">Удалить</a>
                                                     <!-- <p class="text-right"><small>Удалить</small></p> -->
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
+                                    
                                 </div>
                             </div>
-                        {% else %}
-                            <div class="mb-1">
-                                <div class="card" style="width: 22rem;">
-                                    <img src="{{ bookmark.image_url }}" class="card-img-top card-img" alt="...">
-                                    <div class="card-img-overlay">
-                                        <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm"><small>{{ bookmark.base_url }}</small></a>
-                                    </div>
-                                    <div class="card-body">
-                                        <h6 class="card-title title-body">{{ bookmark.title }}</h6>
-                                        <!-- <p class="card-text">{{ bookmark.description }}</p> -->
-                                    </div>
-                                    <div class="card-footer bg-transparent">
-
-                                        <div class="container">
-                                            <div class="row justify-content-between">
-                                                <div class="col-auto">
-                                                    <p class="text-left"><small>Заметки: 0</small></p>
-                                                </div>
-                                                <div class="col-auto">
-                                                    <div class="delete">
-                                                        <a class="btn btn-outline-dark btn-sm" href="#" role="button">Удалить</a>
-                                                        <!-- <p class="text-right"><small>Удалить</small></p> -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
+                            
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
+            <!-- <div class="col-3" style="background-color: black;"></div> -->
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, PasswordField, StringField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms import BooleanField, PasswordField, StringField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 
 from app.user.models import User
 
@@ -73,3 +73,11 @@ class RegistrationForm(FlaskForm):
         if email_count > 0:
             raise ValidationError(
                 "Пользователь с таким почтовым адресом уже существует")
+
+
+class EditProfileForm(FlaskForm):
+    username = StringField("Логин", validators=[DataRequired()], render_kw={"class": "form-control"})
+    about_me = TextAreaField("О себе", validators=[Length(min=0, max=160)], render_kw={"class": "form-control", "placeholder": "Добавить сведения о себе"})
+    location = StringField("Местоположение", render_kw={"class": "form-control", "placeholder": "Добавить местоположение"})
+    web_site = StringField("Веб-сайт", render_kw={"class": "form-control", "placeholder": "Добавить веб-сайт"})
+    submit = SubmitField("Сохранить", render_kw={"class": "btn btn-primary"})

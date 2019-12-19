@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid" style="max-width: 60%;">
+    <title>{{title}}</title>
+    {% include "messages.html" %}
+    <div class="row">
+        <div class="col-2">
+            <table class="info">
+                <tr>
+                    <td><img src="{{ current_user.avatar(128) }}"></td>
+                    
+                </tr>
+                <tr>
+                    <td>
+                        <h4>{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                        <h6>@{{ current_user.username }}</h6>
+                        {% if current_user.about_me %}
+                            <h6>{{ current_user.about_me }}</h6>
+                        {% endif %}
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-9 main-block">
+            <h3>Изменить профиль</h3>
+            <form action="{{ url_for('user.edit_profile')}}" method="POST">
+                {{ edit_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ edit_form.username.label }}
+                    {{ edit_form.username() }}
+                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                  </div>
+
+                  <div class="form-group">
+                      {{ edit_form.about_me.label }}
+                      {{ edit_form.about_me(cols=50, rows=4) }}
+                  </div>
+
+                  <div class="form-group">
+                    {{ edit_form.location.label }}
+                    {{ edit_form.location() }}
+                  </div>
+
+                  <div class="form-group">
+                    {{ edit_form.web_site.label }}
+                    {{ edit_form.web_site() }}
+                  </div>
+                  
+                  {{ edit_form.submit }}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

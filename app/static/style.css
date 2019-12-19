@@ -13,17 +13,31 @@ div.reg-but {
 
 .card-columns {
     display: inline-block;
-    @include media-breakpoint-only(md) {
-        column-count: 5;
-    }
-    @include media-breakpoint-only(lg) {
-        column-count: 6;
-    }
-    @include media-breakpoint-only(xl) {
-        column-count: 7;
-    }
+    max-width: 50rem;
+}
+
+.main-block {
+    border-left-width: 1.5px;
+    border-left-style: solid;
+    border-left-color: #42424248;
+    border-right-width: 1.5px;
+    border-right-style: solid;
+    border-right-color: #42424248;
+
 }
 
 .search-form {
-    margin: 25px 0px 15px 0px;
+    margin: 15px 0px 15px -15px;
+    padding: 0px 0px 0px 15px;
+    border-bottom-width: 1.5px;
+    border-bottom-style: solid;
+    border-bottom-color: #42424248;
+}
+
+.cards {
+    background-color: #fff;
+}
+
+.info {
+    margin-top: 15px;
 }
