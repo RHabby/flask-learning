@@ -12,15 +12,16 @@ from app.user.models import User
 blueprint = Blueprint("collection", __name__, url_prefix="/collection")
 
 
-@blueprint.route("/<string:username>")
+@blueprint.route("user/<string:username>/")
 @login_required
 def index(username):
-    title = f"Полка | {current_user.username}"
     url_form = UrlForm()
+    user = User.query.filter_by(username=username).first_or_404()
     collection = Collections.query.order_by(
-        Collections.created.desc()).filter(Collections.user_id == current_user.id).all()
+        Collections.created.desc()).filter(Collections.user_id == user.id).all()
+    title = f"Полка | {user.username}"
 
-    return render_template("collection/index.html", collection=collection, url_form=url_form, title=title)
+    return render_template("collection/index.html", user=user, collection=collection, url_form=url_form, title=title)
 
 
 @blueprint.route("/process-collecting", methods=["POST"])
@@ -39,8 +40,10 @@ def process_collecting():
             bookmark = Collections(title=url_info["title"], url=url_info["url"],
                                    base_url=base_url, user_id=current_user.id)
         else:
-            bookmark = Collections(title=og_url_info["og:title"], image_url=og_url_info["og:image"], url=og_url_info["og:url"],
-                                   base_url=base_url, description=og_url_info["og:description"], content_type=og_url_info["og:type"], user_id=current_user.id)
+            bookmark = Collections(title=og_url_info["og:title"], image_url=og_url_info["og:image"],
+                                   url=og_url_info["og:url"], base_url=base_url,
+                                   description=og_url_info["og:description"], content_type=og_url_info["og:type"],
+                                   user_id=current_user.id)
 
         db.session.add(bookmark)
         db.session.commit()

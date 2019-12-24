@@ -102,7 +102,7 @@ def start_page():
 @login_required
 def edit_profile():
     title = "Изменить профиль"
-    edit_form = EditProfileForm()
+    edit_form = EditProfileForm(current_user.username)
     if edit_form.validate_on_submit():
         current_user.username = edit_form.username.data
         current_user.about_me = edit_form.about_me.data
@@ -110,10 +110,18 @@ def edit_profile():
         current_user.web_site = edit_form.web_site.data
         db.session.commit()
         flash("Сделано!")
+
     elif request.method == "GET":
         edit_form.username.data = current_user.username
         edit_form.about_me.data = current_user.about_me
         edit_form.location.data = current_user.location 
         edit_form.web_site.data = current_user.web_site
+        
+    else:
+        for field, errors in edit_form.errors.items():
+            for error in errors:
+                flash(
+                    f"Ошибка в поле <{getattr(edit_form, field).label.text}>: {error}")
+        return redirect(url_for("user.edit_profile"))
 
     return render_template("user/edit_profile.html", edit_form=edit_form, title=title)

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{%  block content %}
+    <div class="container-fluid" style="width: 70%;">
+    <br>
+        <div class="row justify-content-md-center">
+            <div class="col-md-3">
+                <h1>File Not Found</h1>
+                <p><a href="{{ url_for('collection.index', username=current_user.username) }}">Вернуться на главную</a></p>
+            </div>
+        </div>
+    </div>   
+
+{% endblock content %}
