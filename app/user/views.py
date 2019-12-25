@@ -124,7 +124,7 @@ def edit_profile():
                     f"Ошибка в поле <{getattr(edit_form, field).label.text}>: {error}")
         return redirect(url_for("user.edit_profile"))
 
-    return render_template("user/edit_profile.html", edit_form=edit_form, title=title)
+    return render_template("user/edit_profile.html", user=current_user, edit_form=edit_form, title=title)
 
 
 @blueprint.route("/follow/<string:username>")
@@ -156,3 +156,18 @@ def unfollow(username):
     db.session.commit()
     return redirect(url_for("collection.index", username=username))
 
+
+@blueprint.route("/user/<string:username>/followers")
+def get_followers(username):
+    user = User.query.filter_by(username=username).first()
+    followers = user.followers.all()
+    title = f"Люди, которые читают {user.first_name} {user.last_name} | Полка"
+    return render_template("user/followers.html", user=user, followers=followers, title=title)
+
+
+@blueprint.route("/user/<string:username>/following")
+def get_following(username):
+    user = User.query.filter_by(username=username).first()
+    followed_users = user.followed.all()
+    title = f"Люди, которыx читаeт {user.first_name} {user.last_name} | Полка"
+    return render_template("user/followed.html", user=user, following=followed_users, title=title)

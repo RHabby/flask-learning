@@ -6,39 +6,7 @@
         {% include "messages.html" %}
         <div class="row">
             <div class="col-3">
-                <table class="info">
-                    <tr>
-                        <td><img src="{{ user.avatar(196) }}"></td>
-                        
-                    </tr>
-                    <tr>
-                        <td>
-                            <h4>{{ user.first_name }} {{ user.last_name }}</h4>
-                            <h6>{{ user.username }}</h6>
-
-                            {% if user.about_me is not none %}
-                                <h6>{{ user.about_me }}</h6>
-                            {% endif %}
-                            <table>
-                                <td style="text-align: left;">
-                                    <p>{{ user.followers.count() }} читателей | </p>
-                                </td>
-                                <td style="text-align: right;">
-                                    <p>{{ user.followed.count() }} читаемых</p>
-                                </td>
-                            </table>
-                            {% if user == current_user %}
-                                <a class="btn btn-outline-dark btn-sm btn-block" href="{{ url_for('user.edit_profile')}}" role="button">Изменить профиль</a>
-                            {% elif not current_user.is_following(user) %}
-                                <a class="btn btn-outline-dark btn-sm btn-block" href="{{ url_for('user.follow', username=user.username)}}" role="button">Читать</a>
-                            {% else %}
-                                <a class="btn btn-outline-dark btn-sm btn-block" href="{{ url_for('user.unfollow', username=user.username)}}" role="button">Перестать читать</a>
-                            {% endif %}
-
-                            
-                        </td>
-                    </tr>
-                </table>
+                {% include "user/_user_info.html" %}
             </div>
             <div class="col-9 main-block">
                 <div class="search-form">

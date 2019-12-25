@@ -4,23 +4,8 @@
     <title>{{title}}</title>
     {% include "messages.html" %}
     <div class="row">
-        <div class="col-2">
-            <table class="info">
-                <tr>
-                    <td><img src="{{ current_user.avatar(128) }}"></td>
-                    
-                </tr>
-                <tr>
-                    <td>
-                        <h4>{{ current_user.first_name }} {{ current_user.last_name }}</h4>
-                        <h6>@{{ current_user.username }}</h6>
-                        {% if current_user.about_me %}
-                            <h6>{{ current_user.about_me }}</h6>
-                        {% endif %}
-
-                    </td>
-                </tr>
-            </table>
+        <div class="col-3">
+            {% include "user/_user_info.html" %}
         </div>
         <div class="col-9 main-block">
             <h3>Изменить профиль</h3>

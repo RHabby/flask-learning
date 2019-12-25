@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container-fluid" style="max-width: 60%;">
+        <title>{{title}}</title>
+        {% include "messages.html" %}
+        <div class="row">
+            <div class="col-3">
+                {% include "user/_user_info.html" %}
+            </div>
+            <div class="col-9 main-block">
+                <div>
+                    <h2>Читаемые /{{user.username}}</h2>
+                </div>
+                {% for followed in following %}
+                    <div style="border: 1px solid #a3a3a3; border-radius: 5px; background-color: rgb(238, 238, 238); padding: 0% -10% 0% -10%;">
+                        <div class="media" style="margin: 0px 10px 0px 10px; padding: 10px;">
+                            <img src="{{ followed.avatar(96) }}" class="align-self-start mr-3" style="border: 1px solid #575757; border-radius: 50%;">
+                            <div class="media-body">
+                                <h5 class="mt-0"><a href="{{ url_for('collection.index', username=followed.username) }}">{{ followed.first_name }} {{ followed.last_name }}</a></h5>
+                                
+                                <h6>{{ followed.username }}
+                                {% if followed.is_following(current_user) %}
+                                    <span class="badge badge-secondary">Читает вас</span>
+                                {% endif %}
+                                </h6>
+
+                                {% if followed.about_me is not none %}
+                                    <p>{{ followed.about_me }}</p>
+                                {% endif %}
+
+                                <div class="following-status" style="padding-left: 85%;">
+                                    {% if current_user.is_following(followed) %}
+                                        <a class="btn btn-outline-primary" href="{{ url_for('user.unfollow', username=followed.username)}}" role="button">Читаемые</a>
+                                    {% else %}
+                                        {% if followed != current_user %}
+                                            <a class="btn btn-outline-primary" href="{{ url_for('user.follow', username=followed.username)}}" role="button">Читать</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <!-- <div class="col-3" style="background-color: black;"></div> -->
+        </div>
+    </div>
+
+{% endblock content%}
