@@ -9,26 +9,9 @@
                 {% include "user/_user_info.html" %}
             </div>
             <div class="col-9 main-block">
-                <div class="search-form">
-                    <form action="{{ url_for('collection.process_collecting')}}" method="POST">
-                        <div class="form-row">
-                            {{ url_form.hidden_tag() }}
-
-                            <div class="col-10">
-                                <div class="form-group">
-                                    <!-- {{ url_form.url.label }} -->
-                                    {{ url_form.url() }}
-                                </div>
-                            </div>
-
-                            <div class="col-auto">
-                                {{ url_form.submit }}
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                <h2>Главная</h2>
                 <div class="card-columns cards">
-                    {% for bookmark in collection %}
+                    {% for bookmark in bookmarks %}
                         {% if bookmark.image_url is none %}
                             <div class="card">
                                 <div class="card-header bg-transparent">
@@ -51,11 +34,6 @@
                                                 <!-- <a class="btn btn-link btn-sm" href="#" role="button"><i class="fas fa-sticky-note fa-lg"></i></a> -->
                                                 <a class="btn btn-link btn-sm" href="#" role="button"><i class="far fa-sticky-note fa-lg"></i></a>
                                             </div>
-                                            <div class="col-auto">
-                                                <div class="delete">
-                                                    <a class="btn btn-link btn-sm" href="#" role="button"><i class="far fa-trash-alt fa-lg"></i></a>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
 
@@ -77,18 +55,14 @@
                                     <div class="container">
                                         <div class="row justify-content-between">
                                             <div class="col-auto">
+                                                <!-- likes -->
                                                 <!-- <a class="btn btn-link btn-sm" href="#" role="button"><i class="fas fa-thumbs-up fa-lg"></i></a> -->
                                                 <a class="btn btn-link btn-sm" href="#" role="button"><i class="far fa-thumbs-up fa-lg"></i></a>
                                             </div>
                                             <div class="col-auto">
+                                                <!-- comments -->
                                                 <!-- <a class="btn btn-link btn-sm" href="#" role="button"><i class="fas fa-sticky-note fa-lg"></i></a> -->
                                                 <a class="btn btn-link btn-sm" href="#" role="button"><i class="far fa-sticky-note fa-lg"></i></a>
-                                            </div>
-                                            <div class="col-auto">
-                                                <div class="delete">
-                                                    <a class="btn btn-link btn-sm" href="#" role="button"><i class="far fa-trash-alt fa-lg"></i></a>
-                                                    <!-- <p class="text-right"><small>Удалить</small></p> -->
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

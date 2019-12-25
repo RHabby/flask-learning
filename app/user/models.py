@@ -5,6 +5,7 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.db import db
+from app.collection.models import Collections
 
 
 followers = db.Table(
@@ -66,7 +67,7 @@ class User(db.Model, UserMixin):
 
     def followed_bookmarks(self):
         collections = Collections.query.join(followers, (followers.c.followed_id == Collections.user_id)).filter(
-            followers.c.followed_id == self.id).order_by(Collections.created.desc())
+            followers.c.follower_id == self.id).order_by(Collections.created.desc())
         return collections
 
     def __repr__(self):

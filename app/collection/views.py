@@ -12,6 +12,14 @@ from app.user.models import User
 blueprint = Blueprint("collection", __name__, url_prefix="/collection")
 
 
+@blueprint.route("/")
+def get_followed_bookmarks():
+    url_form = UrlForm()
+    title = f"Главная | Полка"
+    bookmarks = current_user.followed_bookmarks().all()
+    return render_template("collection/followed_bookmarks.html", url_form=url_form, user=current_user, bookmarks=bookmarks, title=title)
+
+
 @blueprint.route("user/<string:username>/")
 @login_required
 def index(username):
