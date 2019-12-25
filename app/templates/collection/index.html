@@ -19,10 +19,22 @@
                             {% if user.about_me is not none %}
                                 <h6>{{ user.about_me }}</h6>
                             {% endif %}
-
-                            {% if user.username == current_user.username %}
-                                <p><a class="btn btn-outline-dark btn-sm btn-block" href="{{ url_for('user.edit_profile')}}" role="button">Изменить профиль</a></p>
+                            <table>
+                                <td style="text-align: left;">
+                                    <p>{{ user.followers.count() }} читателей | </p>
+                                </td>
+                                <td style="text-align: right;">
+                                    <p>{{ user.followed.count() }} читаемых</p>
+                                </td>
+                            </table>
+                            {% if user == current_user %}
+                                <a class="btn btn-outline-dark btn-sm btn-block" href="{{ url_for('user.edit_profile')}}" role="button">Изменить профиль</a>
+                            {% elif not current_user.is_following(user) %}
+                                <a class="btn btn-outline-dark btn-sm btn-block" href="{{ url_for('user.follow', username=user.username)}}" role="button">Читать</a>
+                            {% else %}
+                                <a class="btn btn-outline-dark btn-sm btn-block" href="{{ url_for('user.unfollow', username=user.username)}}" role="button">Перестать читать</a>
                             {% endif %}
+
                             
                         </td>
                     </tr>

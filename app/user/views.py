@@ -114,9 +114,9 @@ def edit_profile():
     elif request.method == "GET":
         edit_form.username.data = current_user.username
         edit_form.about_me.data = current_user.about_me
-        edit_form.location.data = current_user.location 
+        edit_form.location.data = current_user.location
         edit_form.web_site.data = current_user.web_site
-        
+
     else:
         for field, errors in edit_form.errors.items():
             for error in errors:
@@ -125,3 +125,34 @@ def edit_profile():
         return redirect(url_for("user.edit_profile"))
 
     return render_template("user/edit_profile.html", edit_form=edit_form, title=title)
+
+
+@blueprint.route("/follow/<string:username>")
+@login_required
+def follow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash(f"User {username} not found.")
+        return redirect(url_for("collection.index", username=current_user.username))
+    if user == current_user:
+        flash("You can`t follow yourself.")
+        return redirect(url_for("collection.index", username=current_user.username))
+    current_user.follow(user)
+    db.session.commit()
+    return redirect(url_for("collection.index", username=username))
+
+
+@blueprint.route("/unfollow/<string:username>")
+@login_required
+def unfollow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash(f"User {username} not found.")
+        return redirect(url_for("collection.index", username=current_user.username))
+    if user == current_user:
+        flash("You can`t unfollow yourself.")
+        return redirect(url_for("collection.index", username=current_user.username))
+    current_user.unfollow(user)
+    db.session.commit()
+    return redirect(url_for("collection.index", username=username))
+
