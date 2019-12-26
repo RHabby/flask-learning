@@ -1,13 +1,14 @@
 from flask import Blueprint, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
-from app.collection.forms import UrlForm
-from app.collection.models import Collections
+from app.collection.forms import CommentForm, EditBookmarkForm, UrlForm
+from app.collection.models import Collections, CollectionsComment
 from app.collection.url_extractor.url_extractor import (extract_open_graph,
                                                         extract_url_info,
                                                         find_base_url)
 from app.db import db
 from app.user.models import User
+from app.utils import get_url_target
 
 blueprint = Blueprint("collection", __name__, url_prefix="/collection")
 
@@ -64,3 +65,64 @@ def process_collecting():
                 flash('Ошибка в поле "{}": {}'.format(
                     getattr(url_form, field).label.text, error))
         return redirect(url_for("collection.index", username=current_user.username))
+
+
+@blueprint.route("/bookmark/<int:bookmark_id>")
+@login_required
+def get_single_bookmark_page(bookmark_id):
+    bookmark = Collections.query.filter(
+        Collections.id == bookmark_id).first_or_404()
+    comment_form = CommentForm(collections_id=bookmark_id)
+    title = "Закладка | Полка"
+
+    return render_template("collection/single_bookmark_page.html", user=current_user, comment_form=comment_form, bookmark=bookmark, title=title)
+
+
+@blueprint.route("/comment", methods=["POST"])
+def add_comment():
+    comment_form = CommentForm()
+
+    if comment_form.validate_on_submit():
+        comment = CollectionsComment(
+            text=comment_form.comment_text.data,
+            collections_id=comment_form.collections_id.data,
+            user_id=current_user.id
+        )
+
+        db.session.add(comment)
+        db.session.commit()
+
+        # return redirect(url_for("collection.get_single_bookmark_page", bookmark_id=comment_form.collections_id.data))
+    else:
+        for field, errors in comment_form.errors.items():
+            for error in errors:
+                flash('Ошибка в поле "{}": {}'.format(
+                    getattr(comment_form, field).label.text, error))
+
+    return redirect(get_url_target())
+
+ 
+@blueprint.route("/edit-bookmark", methods=["GET", "POST"])
+def edit_bookmark(bookmark_id):
+    title = "Редактировать закладку"
+    bookmark = Collections.query.filter(
+        Collections.id == bookmark_id).first_or_404()
+    edit_form = EditBookmarkForm()
+
+    if edit_form.validate_on_submit():
+        bookmark.title = edit_form.title.data
+        bookmark.description = edit_form.description.data
+        db.session.commit()
+    
+    elif request.method == "GET":
+        edit_form.title.data = bookmark.username
+        edit_form.description.data = bookmark.about_me
+
+    else:
+        for field, errors in edit_form.errors.items():
+            for error in errors:
+                flash(
+                    f"Ошибка в поле <{getattr(edit_form, field).label.text}>: {error}")
+        return redirect(url_for("collection.edit_bookmark", bookmark_id=bookmark.id))
+        
+    # return render_template("user/edit_profile.html", user=current_user, edit_form=edit_form, title=title)

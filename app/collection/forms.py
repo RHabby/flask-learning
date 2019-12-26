@@ -1,15 +1,18 @@
 import re
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms import HiddenField, StringField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Length, ValidationError
+
+from app.collection.models import Collections
 
 
 class UrlForm(FlaskForm):
     url = StringField(
         "Ссылка",
         validators=[DataRequired()],
-        render_kw={"class": "form-control mb-2 mr-sm-2", "placeholder": "Вставьте ссылку здесь!", "id": "inlineFormInputName2"}
+        render_kw={"class": "form-control mb-2 mr-sm-2",
+                   "placeholder": "Вставьте ссылку здесь!", "id": "inlineFormInputName2"}
     )
     submit = SubmitField(
         "Сохранить",
@@ -22,3 +25,32 @@ class UrlForm(FlaskForm):
         result = pattern.match(url.data)
         if not result:
             raise ValidationError("Не похоже, что вы хотите сохранить ссылку")
+
+
+class CommentForm(FlaskForm):
+    collections_id = HiddenField("ID закладки", validators=[DataRequired()])
+    comment_text = StringField("Ваш комментарий", validators=[DataRequired()], render_kw={
+                               "class": "form-control", "placeholder": "Добавить комментарий"})
+    submit = SubmitField("Готово", render_kw={"class": "btn btn-primary"})
+
+    def validate_news_id(self, collections_id):
+        if not Collections.query.get(collections_id.data):
+            raise ValidationError("Новости с таким ID не существует.")
+
+
+class EditBookmarkForm(FlaskForm):
+    title = StringField(
+        "Название",
+        validators=[DataRequired()],
+        render_kw={"class": "form-control", "placehollder": ""}
+    )
+    description = TextAreaField(
+        "О себе",
+        validators=[Length(min=0, max=200)],
+        render_kw={"class": "form-control",
+                   "placeholder": "Добавить описание"}
+    )
+    submit = SubmitField(
+        "Сохранить",
+        render_kw={"class": "btn btn-primary"}
+    )

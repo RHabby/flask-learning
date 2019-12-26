@@ -49,7 +49,7 @@
                                             <div class="col-auto">
                                                 <!-- comments -->
                                                 <!-- <a class="btn btn-link btn-sm" href="#" role="button"><i class="fas fa-sticky-note fa-lg"></i></a> -->
-                                                <a class="btn btn-link btn-sm" href="#" role="button"><i class="far fa-sticky-note fa-lg"></i></a>
+                                                <a class="btn btn-link btn-sm" href="{{ url_for('collection.get_single_bookmark_page', bookmark_id=bookmark.id) }}" role="button"><i class="far fa-sticky-note fa-lg"></i></a>
                                             </div>
                                             <div class="col-auto">
                                                 <div class="delete">
@@ -82,7 +82,7 @@
                                             </div>
                                             <div class="col-auto">
                                                 <!-- <a class="btn btn-link btn-sm" href="#" role="button"><i class="fas fa-sticky-note fa-lg"></i></a> -->
-                                                <a class="btn btn-link btn-sm" href="#" role="button"><i class="far fa-sticky-note fa-lg"></i></a>
+                                                <a class="btn btn-link btn-sm" href="{{ url_for('collection.get_single_bookmark_page', bookmark_id=bookmark.id) }}" role="button"><i class="far fa-sticky-note fa-lg"></i></a>
                                             </div>
                                             <div class="col-auto">
                                                 <div class="delete">

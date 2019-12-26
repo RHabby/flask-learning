@@ -14,7 +14,8 @@ blueprint = Blueprint("user", __name__)
 def login():
     if current_user.is_authenticated:
         # flash("Вы уже авторизованы!")
-        return redirect(url_for("collection.index", username=current_user.username))
+        # return redirect(url_for("collection.index", username=current_user.username))
+        return redirect(get_url_target())
     else:
         title = "Авторизация"
         login_form = LoginForm()
@@ -29,7 +30,7 @@ def process_login():
 
         if user and user.check_password(login_form.password.data):
             login_user(user, remember=login_form.remember_me.data)
-            flash("Вы успешно авторизовались.")
+            # flash("Вы успешно авторизовались.")
 
             return redirect(get_url_target())
 
