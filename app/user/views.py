@@ -3,7 +3,9 @@ from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
 
 from app.db import db
-from app.user.forms import EditProfileForm, LoginForm, RegistrationForm
+from app.user.email import send_password_reset_email
+from app.user.forms import (EditProfileForm, LoginForm, RegistrationForm,
+                            ResetPasswordForm, ResetPasswordRequestForm)
 from app.user.models import User
 from app.utils import get_url_target
 
@@ -14,8 +16,7 @@ blueprint = Blueprint("user", __name__)
 def login():
     if current_user.is_authenticated:
         # flash("Вы уже авторизованы!")
-        # return redirect(url_for("collection.index", username=current_user.username))
-        return redirect(get_url_target())
+        return redirect(url_for("collection.index", username=current_user.username))
     else:
         title = "Авторизация"
         login_form = LoginForm()
@@ -26,11 +27,12 @@ def login():
 def process_login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        user = User.query.filter_by(username=login_form.username.data).first()
+        user = User.query.filter_by(
+            username=login_form.username.data).first_or_404()
 
         if user and user.check_password(login_form.password.data):
             login_user(user, remember=login_form.remember_me.data)
-            # flash("Вы успешно авторизовались.")
+            flash("Вы успешно авторизовались.")
 
             return redirect(get_url_target())
 
@@ -84,6 +86,7 @@ def start_page():
     if current_user.is_authenticated:
         return redirect(url_for("collection.index", username=current_user.username))
     else:
+        title = "Вход"
         login_title = "Авторизация"
         registration_title = "Регистрация"
 
@@ -92,6 +95,7 @@ def start_page():
 
         return render_template(
             "user/start_page.html",
+            title=title,
             login_title=login_title,
             registration_title=registration_title,
             login_form=login_form,
@@ -172,3 +176,36 @@ def get_following(username):
     followed_users = user.followed.all()
     title = f"Люди, которыx читаeт {user.first_name} {user.last_name} | Полка"
     return render_template("user/followed.html", user=user, following=followed_users, title=title)
+
+
+@blueprint.route("/forgot", methods=["GET", "POST"])
+def reset_password_request():
+    title = "Сбросить пароль"
+    if current_user.is_authenticated:
+        return redirect(url_for("collection.index", username=current_user.username))
+    reset_form = ResetPasswordRequestForm()
+    if reset_form.validate_on_submit():
+        user = User.query.filter_by(email=reset_form.email.data).first()
+        # print(user)
+        if user:
+            send_password_reset_email(user)
+        flash("Ссылка для восстановления пароля была отправлена вам на email")
+        return redirect(url_for("user.login"))
+    return render_template("user/reset_password_request.html", title=title, reset_form=reset_form)
+
+
+@blueprint.route("/reset-password/<string:token>", methods=["GET", "POST"])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for("collection.index", username=current_user.username))
+    user = User.verify_reset_password_token(token)
+
+    if not user:
+        return redirect(url_for("user.registration"))
+    reset_form = ResetPasswordForm()
+    if reset_form.validate_on_submit():
+        user.set_password(reset_form.password.data)
+        db.session.commit()
+        flash("Ваш пароль был восстановлен")
+        return redirect(url_for("user.login"))
+    return render_template("user/reset_password.html", reset_form=reset_form)

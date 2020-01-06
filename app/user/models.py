@@ -1,12 +1,14 @@
 from hashlib import md5
 from random import choice
+from time import time
 
+import jwt
+from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.db import db
 from app.collection.models import Collections
-
+from app.db import db
 
 followers = db.Table(
     "followers",
@@ -27,11 +29,11 @@ class User(db.Model, UserMixin):
     location = db.Column(db.String(30))
     web_site = db.Column(db.String(100))
     followed = db.relationship("User", secondary=followers,
-        primaryjoin=(followers.c.follower_id == id),
-        secondaryjoin=(followers.c.followed_id == id),
-        backref=db.backref("followers", lazy="dynamic"),
-        lazy="dynamic"
-    )
+                               primaryjoin=(followers.c.follower_id == id),
+                               secondaryjoin=(followers.c.followed_id == id),
+                               backref=db.backref("followers", lazy="dynamic"),
+                               lazy="dynamic"
+                               )
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -69,6 +71,25 @@ class User(db.Model, UserMixin):
         collections = Collections.query.join(followers, (followers.c.followed_id == Collections.user_id)).filter(
             followers.c.follower_id == self.id).order_by(Collections.created.desc())
         return collections
+
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {
+                "reset_password": self.id,
+                "exp": time() + expires_in
+            },
+            current_app.config["SECRET_KEY"],
+            algorithm="HS256"
+        ).decode("utf-8")
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=[
+                            "HS256"])["reset_password"]
+        except:
+            return
+        return User.query.get(id)
 
     def __repr__(self):
         return f"<User {self.username} with id: {self.id}>"

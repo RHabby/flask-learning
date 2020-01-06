@@ -111,3 +111,33 @@ class EditProfileForm(FlaskForm):
             if user is not None:
                 raise ValidationError(
                     "Пользователь с таким ником уже зарегистрирован.")
+
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField(
+        "Email",
+        validators=[DataRequired(), Email()],
+        render_kw={"class": "form-control",
+                   "placeholder": "Введите Email"}
+    )
+    submit = SubmitField(
+        "Отправить",
+        render_kw={"class": "btn btn-primary btn-block"}
+    )
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(
+        "Придумайте пароль",
+        validators=[DataRequired()],
+        render_kw={"class": "form-control"}
+    )
+    submit_password = PasswordField(
+        "Повторите пароль",
+        validators=[DataRequired(), EqualTo("password")],
+        render_kw={"class": "form-control"}
+    )
+    submit = SubmitField(
+        "Отправить",
+        render_kw={"class": "btn btn-primary btn-block"}
+    )

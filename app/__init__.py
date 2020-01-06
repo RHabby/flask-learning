@@ -4,6 +4,7 @@ from logging.handlers import RotatingFileHandler, SMTPHandler
 
 from flask import Flask, render_template
 from flask_login import LoginManager
+from flask_mail import Mail
 from flask_migrate import Migrate
 
 from app.admin.views import blueprint as admin_blueprint
@@ -13,7 +14,8 @@ from app.config import Config
 from app.db import db
 from app.errors.views import blueprint as errors_blueprint
 from app.user.models import User
-from app.user.views import blueprint as user_blueprint
+
+mail = Mail()
 
 
 def create_app(config_class=Config):
@@ -30,7 +32,10 @@ def create_app(config_class=Config):
     app.register_blueprint(blueprint=admin_blueprint)
     app.register_blueprint(blueprint=collection_blueprint)
     app.register_blueprint(blueprint=errors_blueprint)
+    from app.user.views import blueprint as user_blueprint
     app.register_blueprint(blueprint=user_blueprint)
+
+    mail.init_app(app)
 
     if not app.debug:
         if app.config["MAIL_SERVER"]:
