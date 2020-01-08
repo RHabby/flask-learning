@@ -101,7 +101,7 @@ def add_comment():
 
     return redirect(get_url_target())
 
- 
+
 @blueprint.route("<int:bookmark_id>/edit-bookmark", methods=["GET", "POST"])
 def edit_bookmark(bookmark_id):
     title = "Редактировать закладку"
@@ -126,5 +126,5 @@ def edit_bookmark(bookmark_id):
                 flash(
                     f"Ошибка в поле <{getattr(edit_form, field).label.text}>: {error}")
         return redirect(url_for("collection.edit_bookmark", bookmark_id=bookmark.id))
-        
+
     return render_template("collection/edit_bookmark.html", user=current_user, bookmark=bookmark, edit_form=edit_form, title=title)

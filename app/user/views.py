@@ -108,11 +108,13 @@ def start_page():
 def edit_profile():
     title = "Изменить профиль"
     edit_form = EditProfileForm(current_user.username)
+    
     if edit_form.validate_on_submit():
         current_user.username = edit_form.username.data
         current_user.about_me = edit_form.about_me.data
         current_user.location = edit_form.location.data
         current_user.web_site = edit_form.web_site.data
+        current_user.set_password(edit_form.new_password.data)
         db.session.commit()
         flash("Сделано!")
 

@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, PasswordField, StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
+from werkzeug.security import check_password_hash
+from wtforms import (BooleanField, PasswordField, StringField, SubmitField,
+                     TextAreaField)
+from wtforms.validators import (DataRequired, Email, EqualTo, Length,
+                                ValidationError)
 
 from app.user.models import User
 
@@ -12,7 +15,8 @@ class LoginForm(FlaskForm):
     )
     password = PasswordField(
         "Пароль",
-        validators=[DataRequired()],
+        validators=[DataRequired(), Length(
+            min=4, message="Пароль должен быть не короче четырех знаков")],
         render_kw={"class": "form-control"}
     )
     remember_me = BooleanField(
@@ -49,7 +53,8 @@ class RegistrationForm(FlaskForm):
     )
     password = PasswordField(
         "Придумайте пароль",
-        validators=[DataRequired()],
+        validators=[DataRequired(), Length(
+            min=4, message="Пароль должен быть не короче четырех знаков")],
         render_kw={"class": "form-control"}
     )
     submit_password = PasswordField(
@@ -96,6 +101,21 @@ class EditProfileForm(FlaskForm):
         "Веб-сайт",
         render_kw={"class": "form-control", "placeholder": "Добавить веб-сайт"}
     )
+    old_password = PasswordField(
+        "Старый пароль",
+        render_kw={"class": "form-control"}
+    )
+    new_password = PasswordField(
+        "Новый пароль",
+        validators=[
+            Length(min=4, message="Пароль должен быть не короче четырех знаков")],
+        render_kw={"class": "form-control"}
+    )
+    submit_new_password = PasswordField(
+        "Повторите новый пароль",
+        validators=[EqualTo("new_password")],
+        render_kw={"class": "form-control"}
+    )
     submit = SubmitField(
         "Сохранить",
         render_kw={"class": "btn btn-primary"}
@@ -111,6 +131,16 @@ class EditProfileForm(FlaskForm):
             if user is not None:
                 raise ValidationError(
                     "Пользователь с таким ником уже зарегистрирован.")
+
+    def validate_old_password(self, old_password):
+        user = User.query.filter_by(username=self.original_username).first()
+        if not check_password_hash(user.password, self.old_password.data):
+            raise ValidationError("Вы ввели неправильный старый пароль.")
+
+    def validate_new_password(self, new_password):
+        user = User.query.filter_by(username=self.original_username).first()
+        if check_password_hash(user.password, self.new_password.data):
+            raise ValidationError("Старый и новый пароли не должны совпадать.")
 
 
 class ResetPasswordRequestForm(FlaskForm):

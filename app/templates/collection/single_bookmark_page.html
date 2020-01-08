@@ -26,9 +26,7 @@
                             <div class="card-img-overlay" style="margin-top: 40%;">
                                 <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm" target="_blank"><small>{{ bookmark.base_url }}</small></a>
                                 <a class="btn btn-primary" href="{{ url_for('collection.edit_bookmark', bookmark_id=bookmark.id) }}" role="button"><i class="far fa-edit"></i></a>
-                                
-                                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><i class="far fa-edit"></i></button> -->
-                            </div>
+                            </disv>
                             <div class="card-body">
                                 <h5 class="card-title">{{ bookmark.title }}</h5>
                                 {% if bookmark.description %}
@@ -60,12 +58,7 @@
                     </div>
                     {{ comment_form.submit() }}
                 </form>
-            <!-- {% else %}
-                <p>
-                    Только авторизованные пользователи могут оставлять комментарии. <a href="{{ url_for('user.login', next=request.full_path) }}">Войдите</a>, пожалуйста.
-                </p> -->
             {% endif %}
-            <!-- <div class="col-3" style="background-color: black;"></div> -->
         </div>
     </div>
 
