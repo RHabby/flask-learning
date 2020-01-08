@@ -42,10 +42,11 @@ class EditBookmarkForm(FlaskForm):
     title = StringField(
         "Название",
         validators=[DataRequired()],
-        render_kw={"class": "form-control", "placehollder": ""}
+        render_kw={"class": "form-control", 
+                   "placeholder": "Добавить название"}
     )
     description = TextAreaField(
-        "О себе",
+        "Описание",
         validators=[Length(min=0, max=200)],
         render_kw={"class": "form-control",
                    "placeholder": "Добавить описание"}

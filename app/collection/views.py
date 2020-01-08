@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, flash, redirect, render_template, url_for, request
 from flask_login import current_user, login_required
 
 from app.collection.forms import CommentForm, EditBookmarkForm, UrlForm
@@ -102,7 +102,7 @@ def add_comment():
     return redirect(get_url_target())
 
  
-@blueprint.route("/edit-bookmark", methods=["GET", "POST"])
+@blueprint.route("<int:bookmark_id>/edit-bookmark", methods=["GET", "POST"])
 def edit_bookmark(bookmark_id):
     title = "Редактировать закладку"
     bookmark = Collections.query.filter(
@@ -113,10 +113,12 @@ def edit_bookmark(bookmark_id):
         bookmark.title = edit_form.title.data
         bookmark.description = edit_form.description.data
         db.session.commit()
-    
+        flash("Готово!")
+        return redirect(url_for("collection.get_single_bookmark_page", bookmark_id=bookmark.id))
+
     elif request.method == "GET":
-        edit_form.title.data = bookmark.username
-        edit_form.description.data = bookmark.about_me
+        edit_form.title.data = bookmark.title
+        edit_form.description.data = bookmark.description
 
     else:
         for field, errors in edit_form.errors.items():
@@ -125,4 +127,4 @@ def edit_bookmark(bookmark_id):
                     f"Ошибка в поле <{getattr(edit_form, field).label.text}>: {error}")
         return redirect(url_for("collection.edit_bookmark", bookmark_id=bookmark.id))
         
-    # return render_template("user/edit_profile.html", user=current_user, edit_form=edit_form, title=title)
+    return render_template("collection/edit_bookmark.html", user=current_user, bookmark=bookmark, edit_form=edit_form, title=title)

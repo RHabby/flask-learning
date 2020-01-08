@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container-fluid" style="max-width: 60%;">
+        <title>{{title}}</title>
+        {% include "messages.html" %}
+        <div class="row">
+            <div class="col-3">
+                {% include "user/_user_info.html" %}
+            </div>
+            <div class="col-9 main-block" style="margin-top: 15px;">
+                
+                <div class="card mb-3">
+                    {% if bookmark.image_url is none %}
+                        <div class="card-header bg-transparent">
+                            <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm" target="_blank"><small>{{ bookmark.base_url }}</small></a>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title title-body">{{ bookmark.title }}</h5>
+                            {% if bookmark.description %}
+                                <p class="card-text">{{ bookmark.description }}</p>
+                            {% endif %}
+                        </div>
+                    {% else %}    
+                            <img src="{{ bookmark.image_url }}" class="card-img-top" alt="...">
+                            <div class="card-img-overlay" style="margin-top: 40%;">
+                                <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm" target="_blank"><small>{{ bookmark.base_url }}</small></a>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ bookmark.title }}</h5>
+                                {% if bookmark.description %}
+                                <p class="card-text">{{ bookmark.description }}</p>
+                                {% endif %}
+                            </div>
+                    {% endif %}
+                    <div class="col-9">
+                        <h3>Редактировать закладку:</h3>
+                        <form action="{{ url_for('collection.edit_bookmark', bookmark_id=bookmark.id)}}" method="POST">
+                            {{ edit_form.hidden_tag() }}
+                            <div class="form-group">
+                                {{ edit_form.title.label }}
+                                {{ edit_form.title() }}
+                                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                              </div>
+                              <div class="form-group">
+                                  {{ edit_form.description.label }}
+                                  {{ edit_form.description(cols=50, rows=4) }}
+                              </div>
+                              
+                              {{ edit_form.submit }}
+                        </form>
+                    </div>
+
+        </div>
+    </div>
+
+{% endblock content%}
