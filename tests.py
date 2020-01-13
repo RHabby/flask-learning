@@ -1,9 +1,8 @@
 import unittest
 from datetime import datetime, timedelta
 
-from app import config, create_app
+from app import config, create_app, db
 from app.collection.models import Collections
-from app.db import db
 from app.user.models import User
 from app.config import Config
 

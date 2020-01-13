@@ -8,7 +8,7 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.collection.models import Collections
-from app.db import db
+from app import db
 
 followers = db.Table(
     "followers",

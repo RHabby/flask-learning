@@ -2,7 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
 
-from app.db import db
+from app import db
 from app.user.email import send_password_reset_email
 from app.user.forms import (EditProfileForm, LoginForm, RegistrationForm,
                             ResetPasswordForm, ResetPasswordRequestForm)

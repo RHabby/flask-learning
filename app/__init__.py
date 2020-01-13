@@ -7,17 +7,19 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
 from flask_moment import Moment
+from flask_sqlalchemy import SQLAlchemy
 
-from app.admin.views import blueprint as admin_blueprint
-from app.collection.models import Collections
-from app.collection.views import blueprint as collection_blueprint
 from app.config import Config
-from app.db import db
-from app.errors.views import blueprint as errors_blueprint
-from app.user.models import User
 
+db = SQLAlchemy()
+migrate = Migrate()
 mail = Mail()
 moment = Moment()
+login_manager = LoginManager()
+login_manager.login_view = "user.login"
+
+from app.collection.models import Collections
+from app.user.models import User
 
 
 def create_app(config_class=Config):
@@ -25,22 +27,24 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     db.init_app(app)
+    migrate.init_app(app=app, db=db)
+    mail.init_app(app)
     moment.init_app(app)
-    migrate = Migrate(app=app, db=db)
-
-    login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = "user.login"
 
+    from app.admin.views import blueprint as admin_blueprint
     app.register_blueprint(blueprint=admin_blueprint)
+
+    from app.collection.views import blueprint as collection_blueprint
     app.register_blueprint(blueprint=collection_blueprint)
+
+    from app.errors.views import blueprint as errors_blueprint
     app.register_blueprint(blueprint=errors_blueprint)
+
     from app.user.views import blueprint as user_blueprint
     app.register_blueprint(blueprint=user_blueprint)
 
-    mail.init_app(app)
-
-    if not app.debug:
+    if not app.debug and not app.testing:
         if app.config["MAIL_SERVER"]:
             auth = None
             if app.config["MAIL_USERNAME"] or app.config["MAIL_PASSWORD"]:
@@ -77,3 +81,5 @@ def create_app(config_class=Config):
         return User.query.get(id)
 
     return app
+
+

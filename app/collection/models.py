@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import relationship
 
-from app.db import db
+from app import db
 
 
 class Collections(db.Model):

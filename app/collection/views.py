@@ -6,7 +6,7 @@ from app.collection.models import Collections, CollectionsComment
 from app.collection.url_extractor.url_extractor import (extract_open_graph,
                                                         extract_url_info,
                                                         find_base_url)
-from app.db import db
+from app import db
 from app.user.models import User
 from app.utils import get_url_target
 

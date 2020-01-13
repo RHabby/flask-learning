@@ -1,8 +1,7 @@
 import sys
 from getpass import getpass
 
-from app import create_app
-from app.db import db
+from app import create_app, db
 from app.user.models import User
 
 

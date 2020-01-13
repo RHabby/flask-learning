@@ -1,7 +1,7 @@
 import requests
 
 from app.collection.models import Collections
-from app.db import db
+from app import db
 
 
 def get_html(url):
