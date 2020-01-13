@@ -12,6 +12,28 @@ from app.utils import get_url_target
 blueprint = Blueprint("user", __name__)
 
 
+@blueprint.route("/")
+def start_page():
+    if current_user.is_authenticated:
+        return redirect(url_for("collection.index", username=current_user.username))
+    else:
+        title = "Вход"
+        login_title = "Авторизация"
+        registration_title = "Регистрация"
+
+        login_form = LoginForm()
+        registration_form = RegistrationForm()
+
+        return render_template(
+            "user/start_page.html",
+            title=title,
+            login_title=login_title,
+            registration_title=registration_title,
+            login_form=login_form,
+            registration_form=registration_form
+        )
+
+
 @blueprint.route("/login")
 def login():
     if current_user.is_authenticated:
@@ -81,34 +103,12 @@ def process_registration():
         return redirect(url_for("user.registration"))
 
 
-@blueprint.route("/")
-def start_page():
-    if current_user.is_authenticated:
-        return redirect(url_for("collection.index", username=current_user.username))
-    else:
-        title = "Вход"
-        login_title = "Авторизация"
-        registration_title = "Регистрация"
-
-        login_form = LoginForm()
-        registration_form = RegistrationForm()
-
-        return render_template(
-            "user/start_page.html",
-            title=title,
-            login_title=login_title,
-            registration_title=registration_title,
-            login_form=login_form,
-            registration_form=registration_form
-        )
-
-
 @blueprint.route("/profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
     title = "Изменить профиль"
     edit_form = EditProfileForm(current_user.username)
-    
+
     if edit_form.validate_on_submit():
         current_user.username = edit_form.username.data
         current_user.about_me = edit_form.about_me.data

@@ -13,7 +13,7 @@ class Collections(db.Model):
     base_url = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
     content_type = db.Column(db.String)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(
         db.Integer,
         db.ForeignKey("user.id", ondelete="CASCADE"),
@@ -32,7 +32,7 @@ class Collections(db.Model):
 class CollectionsComment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     collections_id = db.Column(
         db.Integer,
         db.ForeignKey("collections.id", ondelete="CASCADE"),

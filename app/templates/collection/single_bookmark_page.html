@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container-fluid" style="max-width: 60%;">
+    <div class="container-fluid" style="max-width: 70%;">
         <title>{{title}}</title>
         {% include "messages.html" %}
         <div class="row">
@@ -22,43 +22,52 @@
                             {% endif %}
                         </div>
                     {% else %}    
-                            <img src="{{ bookmark.image_url }}" class="card-img-top" alt="...">
-                            <div class="card-img-overlay" style="margin-top: 40%;">
-                                <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm" target="_blank"><small>{{ bookmark.base_url }}</small></a>
-                                <a class="btn btn-primary" href="{{ url_for('collection.edit_bookmark', bookmark_id=bookmark.id) }}" role="button"><i class="far fa-edit"></i></a>
-                            </disv>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ bookmark.title }}</h5>
-                                {% if bookmark.description %}
-                                <p class="card-text">{{ bookmark.description }}</p>
-                                {% endif %}
-                            </div>
-                    {% endif %}
-
-                {% if bookmark.comments %}
-                <h3>Комментарии:</h3>
-                {% for comment in bookmark.comments %}
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-text">{{ comment.text }}</p>
-                            <p class="card-text">
-                                <small>Опубликовано: {{ comment.created.strftime("%d.%m.%Y") }} | Автор: {{ comment.user.username }}</small>
-                            </p>
+                        <img src="{{ bookmark.image_url }}" class="card-img-top" alt="...">
+                        <div class="card-img-overlay" style="margin-top: 40%;">
+                            <a href="{{ bookmark.url }}" class="btn btn-primary btn-sm" target="_blank"><small>{{ bookmark.base_url }}</small></a>
+                            <a class="btn btn-primary" href="{{ url_for('collection.edit_bookmark', bookmark_id=bookmark.id) }}" role="button"><i class="far fa-edit"></i></a>
                         </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ bookmark.title }}</h5>
+                            {% if bookmark.description %}
+                            <p class="card-text">{{ bookmark.description }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    {% if bookmark.comments %}
+                        <h3>Комментарии:</h3>
+                        {% for comment in bookmark.comments %}
+                            <div class="media">
+                                <img src="{{ comment.user.avatar(64) }}" class="mr-3" alt="...">
+                                <div class="media-body">
+                                    <h6 class="mt-0">{{ comment.user.username }}<small> Опубликовано: {{ moment(comment.created).fromNow() }}</small></h6>
+                                    <p>{{ comment.text }}</p>    
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                        
+                    <div class="comment-form">
+
+                        {% if current_user.is_authenticated %}
+                            <form action="{{ url_for('collection.add_comment') }}" method="POST">
+                                {{ comment_form.hidden_tag() }}
+                                
+                                <div class="form-group">
+                                    <h4>{{ comment_form.comment_text.label }}</h4>
+                                    {{ comment_form.comment_text(cols=20, rows=4) }}                    
+                                </div>
+
+                                {{ comment_form.submit() }}
+                            </form>
+                        {% endif %}
+
                     </div>
-                {% endfor %}
-            {% endif %}
-            
-            {% if current_user.is_authenticated %}
-                <form action="{{ url_for('collection.add_comment') }}" method="POST">
-                    {{ comment_form.hidden_tag() }}
-                    <div class="form-group">
-                        <!-- {{ comment_form.comment_text.label }} -->
-                        {{ comment_form.comment_text() }}                    
-                    </div>
-                    {{ comment_form.submit() }}
-                </form>
-            {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 

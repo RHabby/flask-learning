@@ -13,14 +13,6 @@ from app.utils import get_url_target
 blueprint = Blueprint("collection", __name__, url_prefix="/collection")
 
 
-@blueprint.route("/")
-def get_followed_bookmarks():
-    url_form = UrlForm()
-    title = f"Главная | Полка"
-    bookmarks = current_user.followed_bookmarks().all()
-    return render_template("collection/followed_bookmarks.html", url_form=url_form, user=current_user, bookmarks=bookmarks, title=title)
-
-
 @blueprint.route("user/<string:username>/")
 @login_required
 def index(username):
@@ -65,6 +57,14 @@ def process_collecting():
                 flash('Ошибка в поле "{}": {}'.format(
                     getattr(url_form, field).label.text, error))
         return redirect(url_for("collection.index", username=current_user.username))
+
+
+@blueprint.route("/")
+def get_followed_bookmarks():
+    url_form = UrlForm()
+    title = f"Главная | Полка"
+    bookmarks = current_user.followed_bookmarks().all()
+    return render_template("collection/followed_bookmarks.html", url_form=url_form, user=current_user, bookmarks=bookmarks, title=title)
 
 
 @blueprint.route("/bookmark/<int:bookmark_id>")

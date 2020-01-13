@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container-fluid" style="max-width: 60%;">
+    <div class="container-fluid" style="max-width: 70%;">
         <title>{{title}}</title>
         {% include "messages.html" %}
         <div class="row">
@@ -27,6 +27,7 @@
                         </div>
                     </form>
                 </div>
+                <h2>Ваша коллекция</h2>
                 <div class="card-columns cards">
                     {% for bookmark in collection %}
                         {% if bookmark.image_url is none %}
@@ -100,7 +101,6 @@
                     {% endfor %}
                 </div>
             </div>
-            <!-- <div class="col-3" style="background-color: black;"></div> -->
         </div>
     </div>
 

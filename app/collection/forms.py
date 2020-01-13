@@ -29,8 +29,11 @@ class UrlForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     collections_id = HiddenField("ID закладки", validators=[DataRequired()])
-    comment_text = StringField("Ваш комментарий", validators=[DataRequired()], render_kw={
-                               "class": "form-control", "placeholder": "Добавить комментарий"})
+    comment_text = TextAreaField(
+        "Написать комментарий", 
+        validators=[DataRequired(), Length(min=2, max=360)], 
+        render_kw={"class": "form-control", "placeholder": "Добавить комментарий"}
+    )
     submit = SubmitField("Готово", render_kw={"class": "btn btn-primary"})
 
     def validate_news_id(self, collections_id):

@@ -18,11 +18,20 @@
         <!-- Font awesome icons kit -->
         <script src="https://kit.fontawesome.com/c9be188901.js" crossorigin="anonymous"></script>
 
+        {% block scripts %}
+            {{ moment.include_jquery() }}
+            {{ moment.include_moment() }}
+            {{ moment.locale("ru") }}
+        {% endblock scripts %}
+
         <title>{{ title }}</title>
     </head>
     <body>
         {% include "menu.html" %}
         {% block content %}{% endblock %}
+        <div class="footer">
+            {% block footer %}{% endblock footer %}
+        </div>
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->

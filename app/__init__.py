@@ -6,6 +6,7 @@ from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
+from flask_moment import Moment
 
 from app.admin.views import blueprint as admin_blueprint
 from app.collection.models import Collections
@@ -16,6 +17,7 @@ from app.errors.views import blueprint as errors_blueprint
 from app.user.models import User
 
 mail = Mail()
+moment = Moment()
 
 
 def create_app(config_class=Config):
@@ -23,6 +25,7 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     db.init_app(app)
+    moment.init_app(app)
     migrate = Migrate(app=app, db=db)
 
     login_manager = LoginManager()
